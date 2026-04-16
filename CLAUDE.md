@@ -24,9 +24,13 @@ VSCode 안에서 픽셀 고양이를 키우는 익스텐션.
 
 ```
 extension.js (activate)
-  ├── StatusBarItem  → 상태바에 고양이 이모지/텍스트 표시
-  ├── WebviewPanel   → Canvas로 고양이 애니메이션 렌더링
-  └── Commands       → /food, /pet, /sleep → 고양이 상태 변경
+  ├── StatusBarItem (Left)  → =^･ω･^= 애니메이션 텍스트, 클릭 시 패널 열기
+  ├── WebviewPanel          → Canvas 렌더링 + 자율 행동 상태 머신
+  │     ├── drawBG()        → 별/바닥 배경
+  │     ├── drawCat()       → 상태별 스프라이트 (walk/sit/groom/sleep/eat/happy)
+  │     ├── tickState()     → 고양이 자율 이동 + 상태 전환 타이머
+  │     └── tickParticles() → 하트/Zzz/반짝 파티클
+  └── Commands              → extension→webview postMessage로 상태 전환
 ```
 
 ---

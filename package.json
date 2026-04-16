@@ -1,41 +1,22 @@
 {
   "name": "pixel-cat",
-  "displayName": "Pixel Cat",
-  "description": "VSCode 안에서 픽셀 고양이를 키우는 익스텐션",
-  "version": "0.0.1",
+  "displayName": "🐱 Pixel Cat",
+  "description": "A tiny pixel cat lives in your editor",
+  "version": "0.1.1",
   "publisher": "uwol-is-june",
-  "engines": {
-    "vscode": "^1.85.0"
-  },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [
-    "onStartupFinished"
-  ],
+  "engines": { "vscode": "^1.80.0" },
+  "categories": ["Other"],
+  "activationEvents": ["onStartupFinished"],
   "main": "./extension.js",
   "contributes": {
     "commands": [
-      {
-        "command": "pixel-cat.food",
-        "title": "Pixel Cat: Feed the cat 🐟"
-      },
-      {
-        "command": "pixel-cat.pet",
-        "title": "Pixel Cat: Pet the cat 🤚"
-      },
-      {
-        "command": "pixel-cat.sleep",
-        "title": "Pixel Cat: Put cat to sleep 💤"
-      },
-      {
-        "command": "pixel-cat.open",
-        "title": "Pixel Cat: Open cat window 🐱"
-      }
+      { "command": "pixelCat.show",  "title": "🐱 Pixel Cat: Show" },
+      { "command": "pixelCat.food",  "title": "🐟 Pixel Cat: /food" },
+      { "command": "pixelCat.pet",   "title": "🤚 Pixel Cat: /pet"  },
+      { "command": "pixelCat.sleep", "title": "💤 Pixel Cat: /sleep" }
     ]
   },
   "scripts": {
-    "lint": "eslint .",
     "package": "vsce package"
   },
   "devDependencies": {
