@@ -1,0 +1,6 @@
+.vscode/**
+docs/**
+.git/**
+.gitignore
+CLAUDE.md
+*.vsix
