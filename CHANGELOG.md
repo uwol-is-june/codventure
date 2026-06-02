@@ -1,7 +1,31 @@
 # Changelog
 
-All notable changes to **Pixel Cat** are documented here.  
+All notable changes to **Codventure** are documented here.  
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+---
+
+## [0.3.0] — 2026-06-02 · Fantasy Adventure System
+
+캐릭터 시스템 전면 교체 및 v0.2 목표 전체 완성. 고양이에서 판타지 직업 캐릭터로 리빌드.
+
+### Added
+- **직업 선택 화면** — 최초 실행 시 Knight / Mage / Cleric 3종 카드 선택. 호버 시 카드 부상, 클릭 시 파티클 폭발 + 줌인 확정 연출
+- **판타지 캐릭터 렌더러** — 직업별 픽셀아트 스프라이트 3종, 9가지 애니메이션 상태 (걷기 / 달리기 / 앉기 / 자기 / 먹기 / 코딩 / 승리 / 깃발꽂기 / 위험보행). Lv.4+ 직업별 외형 추가 (Knight 황금 왕관 / Mage 별 장식 / Cleric 성스러운 빛)
+- **횡스크롤 패럴랙스 배경** — 5개 존 (마을 → 숲 → 산 → 황무지 → 마왕성), 하늘·중경·지면 3단 레이어. 레벨업 시 존 전환 페이드 연출
+- **HP 시스템** — 분당 HP 소모 (직업별 배율 적용), HP 바 UI (녹색→노랑→빨강 색상 전환), HP 30% 이하 캐릭터 외곽 빨간 깜빡임, HP 0 자동 캠프 진입
+- **EventDetector** — 타이핑 / 빌드 성공·실패 / git 커밋 / 에러 증감 감지 → XP·HP·애니메이션 자동 연동
+- **타이핑 → 걷기 연동** — 코딩 시작 시 캐릭터가 걷기 시작, 30초 비활성 후 자동 복귀
+- **빌드 → 질주** — 빌드 성공 시 0.8초 달리기 + 스크롤 부스트
+- **커밋 → 깃발꽂기** — git 커밋 감지 시 깃발꽂기 4단계 애니메이션 재생
+- **휴식 시스템** — ⛺ 쉬기 버튼으로 캠프 씬 전환, 모닥불 스프라이트 + 불씨 파티클, 30초 단위 HP 회복
+- **XP 팝업 & 레벨업 UI** — XP·HP 증감 부유 팝업, 레벨업 시 흰색 플래시 + 골드 텍스트 연출
+- **저장/로드** — 저장 키 `codventure.state`로 통일, 구버전 `catData` 자동 마이그레이션, `ready` → `state_loaded` 동기화 프로토콜, `deactivate` 핸들러 추가
+
+### Changed
+- 캐릭터: 고양이(fire/water/grass) → 판타지 직업(Knight/Mage/Cleric)
+- 상태바: `⚔️ Lv.3 | ████████ HP | 1,240 XP` 형식. HP 30% 이하 ⚠️ 경고, Lv.5 `👑 전설의 기사` 형식
+- 직업별 스탯 분기 — Knight (HP 120 / 소모×0.7) · Mage (HP 80 / XP×1.5) · Cleric (HP 100 / 회복×2.0)
 
 ---
 

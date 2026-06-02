@@ -1,9 +1,9 @@
-# pixel_cat 🐱
+# Codventure
 
-VSCode 안에서 픽셀 고양이를 키우는 익스텐션.
+VSCode 안에서 코딩하면 판타지 캐릭터가 모험을 떠나는 어드벤처 익스텐션.
 
-고양이 **Nabi**는 Explorer 사이드바 패널에서 스스로 걷고, 앉고, 그루밍하며 생활한다.
-커맨드로 밥을 주거나 쓰다듬거나 재울 수 있다.
+캐릭터는 Explorer 사이드바 패널에서 스스로 움직이며 모험을 이어간다.
+커맨드로 상호작용하거나 패널에서 직접 조작할 수 있다.
 
 ---
 
@@ -11,7 +11,7 @@ VSCode 안에서 픽셀 고양이를 키우는 익스텐션.
 
 1. 이 폴더를 VSCode에서 열기
 2. **F5** → Extension Development Host 창이 열림
-3. 상태바 왼쪽 하단 `=^･ω･^=` 클릭하거나 커맨드 팔레트에서 "Pixel Cat" 검색
+3. 상태바 왼쪽 하단 `=^･ω･^=` 클릭하거나 커맨드 팔레트에서 "Codventure" 검색
 
 ---
 
@@ -19,11 +19,11 @@ VSCode 안에서 픽셀 고양이를 키우는 익스텐션.
 
 | 커맨드 팔레트 | 설명 |
 |--------------|------|
-| `🐱 Pixel Cat: Show` | 고양이 패널 열기 |
-| `🐟 Pixel Cat: /food` | 먹이 주기 → 생선 먹는 애니메이션 + ✦ 파티클 |
-| `🤚 Pixel Cat: /pet` | 쓰다듬기 → happy 애니메이션 + ♥ 파티클 |
-| `💤 Pixel Cat: /sleep` | 재우기 / 깨우기 (토글) → Zzz 파티클 |
-| `💻 Pixel Cat: /code` | 맥북 코딩 모드 → 타이핑 애니메이션 + 코드 파티클 |
+| `🐱 Codventure: Show` | 고양이 패널 열기 |
+| `🐟 Codventure: /food` | 먹이 주기 → 생선 먹는 애니메이션 + ✦ 파티클 |
+| `🤚 Codventure: /pet` | 쓰다듬기 → happy 애니메이션 + ♥ 파티클 |
+| `💤 Codventure: /sleep` | 재우기 / 깨우기 (토글) → Zzz 파티클 |
+| `💻 Codventure: /code` | 맥북 코딩 모드 → 타이핑 애니메이션 + 코드 파티클 |
 
 > 팔레트 단축키: `Ctrl+Shift+P` / `Cmd+Shift+P`  
 > 패널 내 버튼(`/food`, `/sleep`, `/code`)으로도 동일하게 조작 가능  
@@ -76,7 +76,7 @@ VSCode 안에서 픽셀 고양이를 키우는 익스텐션.
 
 # 패키징 (vsce 필요)
 npm run package
-# → pixel-cat-x.x.x.vsix 생성
+# → codventure-x.x.x.vsix 생성
 # Extensions 패널 → ... → Install from VSIX 로 설치
 ```
 
@@ -126,7 +126,7 @@ npm run package
 - `WebviewPanel` 제거, `CatViewProvider` (`WebviewViewProvider`) 도입
 - Explorer 사이드바에 "🐱 Nabi" 패널 상시 표시
 - `package.json`에 `views.explorer` 등록
-- 상태바 클릭 시 사이드바 패널 포커스 (`pixelCat.focus`)
+- 상태바 클릭 시 사이드바 패널 포커스 (`codventure.focus`)
 - 나머지 동작(커맨드·애니메이션·파티클)은 그대로 유지
 
 ---
@@ -142,7 +142,7 @@ npm run package
 - 캔버스 내 버튼으로 직접 커맨드 실행
 - `/sleep` 토글 (재실행 시 깨움)
 - 캔버스 고양이 클릭 → meow + happy 상태
-- 커맨드 ID `pixelCat.*` 로 통일
+- 커맨드 ID `codventure.*` 로 통일
 - `.vscode/launch.json` 추가 (F5 디버그 설정)
 
 ---

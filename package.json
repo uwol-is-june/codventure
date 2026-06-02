@@ -1,12 +1,12 @@
 {
-  "name": "pixel-cat",
-  "displayName": "🐱 Pixel Cat",
-  "description": "A tiny pixel cat lives in your editor",
-  "version": "0.2.0",
+  "name": "codventure",
+  "displayName": "Codventure",
+  "description": "Code to embark on an adventure — your pixel cat grows, evolves, and gains powers as you type",
+  "version": "0.3.0",
   "publisher": "uwol-is-june",
   "repository": {
     "type": "git",
-    "url": "https://github.com/uwol-is-june/pixel_cat.git"
+    "url": "https://github.com/uwol-is-june/codventure.git"
   },
   "engines": {
     "vscode": "^1.80.0"
@@ -24,31 +24,31 @@
       "explorer": [
         {
           "type": "webview",
-          "id": "pixelCat",
-          "name": "🐱 Nabi"
+          "id": "codventure",
+          "name": "Codventure"
         }
       ]
     },
     "commands": [
       {
-        "command": "pixelCat.show",
-        "title": "🐱 Pixel Cat: Show"
+        "command": "codventure.show",
+        "title": "Codventure: Show"
       },
       {
-        "command": "pixelCat.food",
-        "title": "🐟 Pixel Cat: /food"
+        "command": "codventure.food",
+        "title": "Codventure: /food"
       },
       {
-        "command": "pixelCat.pet",
-        "title": "🤚 Pixel Cat: /pet"
+        "command": "codventure.pet",
+        "title": "Codventure: /pet"
       },
       {
-        "command": "pixelCat.sleep",
-        "title": "💤 Pixel Cat: /sleep"
+        "command": "codventure.sleep",
+        "title": "Codventure: /sleep"
       },
       {
-        "command": "pixelCat.code",
-        "title": "💻 Pixel Cat: /code"
+        "command": "codventure.code",
+        "title": "Codventure: /code"
       }
     ]
   },

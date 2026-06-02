@@ -5,3 +5,4 @@ docs/**
 CLAUDE.md
 *.vsix
 generate-icon.js
+node_modules/**

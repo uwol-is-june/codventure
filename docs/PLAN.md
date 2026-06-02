@@ -1,108 +1,166 @@
-# pixel_cat — 전체 로드맵
+# codventure — 개발 계획서
 
-현재 버전: **v0.1.5** (마켓플레이스 배포 완료)
-
----
-
-## 핵심 설계 원칙
-
-> **성취감은 있되, 숙제는 없다.**
-
-- ❌ 배고픔/행복도 감소 → 챙겨주지 않으면 상태가 나빠지는 구조 없음
-- ❌ 시간 경과 패널티 → 오래 쉬어도 고양이는 그냥 잘 있음
-- ✅ 코딩할수록 XP 쌓임 → 자연스럽게 레벨업
-- ✅ 레벨에 따라 외형 진화 → 눈에 보이는 성장
-- ✅ 커맨드(/food, /pet)는 보너스 XP 수단 → 눌러도 그만, 안 눌러도 그만
+현재 버전: **v0.1.5** (마켓플레이스 배포 완료)  
+장르: 판타지 횡스크롤 어드벤처 VSCode 익스텐션
 
 ---
 
-## v0.1 — MVP ✅ 완료
+## 핵심 설계 철학
 
-**목표**: 고양이가 살아있다는 느낌. 기본 상호작용 가능.
+> **코딩이 곧 모험이다. 개발자의 리듬이 게임의 리듬이다.**
 
-### 애니메이션
-- [x] 걷기 (walk) — 좌우 이동, 8프레임 보정(Bob), 꼬리 스윙
-- [x] 앉기 (sit) — 정지 후 앉기, 호흡/눈 깜빡임
-- [x] 그루밍 (groom) — 12프레임 발 핥기 동작
-- [x] 잠자기 (sleep) — 눕기 자세 + Zzz 파티클
-- [x] 먹기 (eat) — 생선 스프라이트 + 씹는 동작
-- [x] 기쁨 (happy) — 점프 + 하트 파티클
-- [x] 코딩 (code) — 노트북 앞에서 타이핑
+게임이 개발자에게 맞춰진다. 개발자가 게임에 맞추지 않는다.
 
-### 커맨드
-- [x] `pixelCat.food` — 먹기 애니메이션
-- [x] `pixelCat.pet` — 기쁨(happy) 애니메이션
-- [x] `pixelCat.sleep` — 수면 토글
-- [x] `pixelCat.show` — 패널 열기/포커스
-- [x] `pixelCat.code` — 코딩 애니메이션
+| 개발자가 하는 것 | 게임에서 일어나는 것 |
+|---|---|
+| 코드를 타이핑한다 | 캐릭터가 오른쪽으로 전진한다 |
+| 빌드/실행을 돌린다 | 캐릭터가 질주한다 |
+| git commit을 한다 | 깃발을 꽂는다 (저장점) |
+| 에러 로그가 뜬다 | 몬스터가 나타난다 |
+| 디버깅 중이다 | 전투 중이다 |
+| 버그를 고쳤다 | 몬스터를 쓰러뜨렸다 |
+| 쉬고 싶어서 멈춘다 | 캠프를 친다 (HP 회복) |
 
-### 인프라
-- [x] 상태바 애니메이션 텍스트 (4프레임 반복)
-- [x] Explorer 사이드바 WebviewView 패널
-- [x] 30fps Canvas 렌더링 루프
-- [x] VSCode ↔ Webview postMessage 통신
-- [x] 파티클 시스템 (하트, Zzz, 반짝, 코드심볼)
-- [x] 상태 자동전환 state machine + 타이머
-- [x] Procedural 픽셀아트 스프라이트 (PNG 없음)
-- [x] `icon.png` (128×128) 제작 및 마켓플레이스 배포
+### 절대 없는 것
+
+- ❌ 방치 패널티 — 자리를 비워도 상태 악화 없음
+- ❌ 강제 귀환 — HP 0이어도 데스 없음, 자동 캠프 전환
+- ❌ 숙제 느낌의 일일 미션 — 모든 이벤트는 개발 행동에서 자연 발생
+
+### 반드시 있는 것
+
+- ✅ 캐릭터는 항상 오른쪽으로 걷고 있음 (모험 중단 없음)
+- ✅ XP 오를 때 HP도 소모됨 (전진의 대가)
+- ✅ 휴식 버튼으로 언제든 캠프 전환 가능
+- ✅ 버그 수정 = 몬스터 격퇴 = 뿌듯함
 
 ---
 
-## v0.2 — 입양 선택 & 레벨 시스템
+## 아키텍처 개요
 
-**목표**: 내 고양이라는 애착. 코딩할수록 자란다는 성취감.
-
-### 최초 실행 — 알 선택
-처음 실행 시 `catType`이 없으면 Canvas에 알 3개를 표시한다.  
-호버 시 흔들리고, 클릭 시 부화 연출 후 새끼 고양이가 등장한다.  
-선택은 한 번만, 이후엔 바로 고양이 화면으로 진입.
-
-### 속성별 팔레트
-| 속성 | 몸통 | 줄무늬 | 눈 | 파티클 |
-|------|------|--------|-----|--------|
-| 🔴 불 (Fire) | `#e8521a` 주홍 | `#b03010` 진홍 | `#ff4400` 붉은 불꽃 | 불꽃 🔥 |
-| 🔵 물 (Water) | `#4a90d9` 파랑 | `#2860a8` 남색 | `#00ccff` 하늘 | 물방울 💧 |
-| 🟢 풀 (Grass) | `#5ab84a` 초록 | `#3a8030` 진녹 | `#aaff44` 연두 | 잎사귀 🍃 |
-
-### XP & 레벨 테이블
 ```
-Lv.1  알에서 막 나온 새끼   (0 XP ~)
-Lv.2  아기                 (500 XP ~)
-Lv.3  성묘                 (1500 XP ~)
-Lv.4  정예                 (3500 XP ~)
-Lv.5  전설                 (7000 XP ~)
+codventure/
+├── src/
+│   ├── extension.ts          # 진입점, VSCode 이벤트 구독
+│   ├── GameController.ts     # 전체 게임 상태 관리 (싱글턴)
+│   ├── EventDetector.ts      # VSCode 개발 행동 감지
+│   ├── panel/
+│   │   ├── GamePanel.ts      # WebviewView 패널 관리
+│   │   └── webview/
+│   │       ├── index.html
+│   │       ├── main.ts       # 메인 게임 루프 (Canvas)
+│   │       ├── renderer/
+│   │       │   ├── CharacterRenderer.ts
+│   │       │   ├── BackgroundRenderer.ts
+│   │       │   ├── MonsterRenderer.ts
+│   │       │   ├── ParticleSystem.ts
+│   │       │   └── UIRenderer.ts
+│   │       ├── game/
+│   │       │   ├── StateMachine.ts
+│   │       │   ├── Character.ts
+│   │       │   ├── Monster.ts
+│   │       │   └── World.ts
+│   │       └── sprites/
+│   │           ├── KnightSprite.ts
+│   │           ├── MageSprite.ts
+│   │           └── ClericSprite.ts
+│   └── storage/
+│       └── SaveManager.ts    # VSCode globalState 저장/로드
+├── package.json
+└── docs/
+    ├── PLAN.md               # 이 파일 — 기획/설계
+    ├── TASK.md               # 현재 진행 태스크
+    └── BACKLOG.md            # 추후 개발 항목
 ```
-XP 획득: VSCode 활성 1분 = +1 XP / /food·/pet 커맨드 = +5 XP 보너스
 
-### 외형 진화 (레벨별)
-- Lv.1: 새끼 비율 (눈 크고 머리 큼), 속성 팔레트 적용
-- Lv.2: 성장 비율, 줄무늬 선명
-- Lv.3: 성묘 비율, 귀에 털 추가
-- Lv.4: 속성 악세서리 (불=불꽃 왕관, 물=물방울 목걸이, 풀=잎사귀 머리띠)
-- Lv.5: 속성 오라 파티클 상시 발생 + 특별 색상 (불=금빛, 물=은빛, 풀=황금잎)
+### 메시지 프로토콜 (VSCode ↔ Webview)
 
-### 상태바
-레벨과 속성 이모지 표시: `🔴 =^･ω･^= Lv.3`
+```typescript
+// Extension → Webview
+type ExtensionMessage =
+  | { type: 'xp_gained';    amount: number; reason: XPReason }
+  | { type: 'hp_changed';   amount: number; reason: HPReason }
+  | { type: 'monster_spawn'; monster: MonsterType }
+  | { type: 'monster_defeat' }
+  | { type: 'rest_start' }
+  | { type: 'rest_end' }
+  | { type: 'level_up';    newLevel: number }
+  | { type: 'state_loaded'; state: GameState }
 
----
-
-## v0.3 — 마켓플레이스 완성도
-
-**목표**: 스토어 페이지를 보고 설치하고 싶게.
-
-- [ ] README 스크린샷 / GIF (진화 단계 비교 이미지 포함)
-- [ ] `CHANGELOG.md` 작성
-- [ ] 레벨별 언락 애니메이션 (특정 레벨에서만 볼 수 있는 동작)
-- [ ] 고양이 이름 설정 기능
-- [ ] 배경 테마 (방 인테리어, 레벨업 시 업그레이드)
+// Webview → Extension
+type WebviewMessage =
+  | { type: 'rest_requested' }
+  | { type: 'ready' }
+  | { type: 'save_state'; state: GameState }
+```
 
 ---
 
-## 문서 불일치 메모
+## 데이터 모델
 
-| 항목 | spec | 실제 코드 |
-|------|------|----------|
-| `/pet` 커맨드 | 그루밍 애니메이션 | happy 애니메이션 (하트 파티클) |
-| `/code` 커맨드 | 미정의 | 완전 구현됨 |
-| 상태바 상태 인식 | 구현 완료로 표기 | 미구현 — v0.2 레벨 표시로 대체 |
-| 그루밍 트리거 | `/pet` 커맨드 | 자율 상태전환에서만 발생 |
+```typescript
+interface GameState {
+  version: number
+  character: {
+    class: 'knight' | 'mage' | 'cleric'
+    name: string
+    level: number      // 1–5
+    xp: number
+    hp: number
+    maxHp: number      // 직업별 상이
+    title?: string     // Lv.5 엔딩 후 칭호
+  }
+  world: {
+    distanceTraveled: number   // 횡스크롤 총 이동 거리 (px 누적)
+    currentZone: Zone          // 'village' | 'forest' | 'mountain' | 'wasteland' | 'castle'
+    flagsPlanted: number       // 커밋 횟수
+  }
+  stats: {
+    bugsDefeated: number
+    totalCommits: number
+    totalBuilds: number
+    totalXP: number
+  }
+  companions: CompanionId[]    // 합류한 동료 목록
+  firstSetup: boolean          // false면 직업선택 스킵
+}
+
+type Zone = 'village' | 'forest' | 'mountain' | 'wasteland' | 'castle'
+type MonsterType = 'bug_slime' | 'deadlock_skull' | 'critical_dragon' | 'demon_king'
+type XPReason = 'typing' | 'build' | 'commit' | 'bug_fixed' | 'test_pass'
+type HPReason = 'typing_drain' | 'battle' | 'rest_recovery' | 'commit_bonus'
+```
+
+### 직업별 스탯
+
+```typescript
+const CLASS_STATS = {
+  knight: { maxHp: 120, hpDrainMultiplier: 0.7,  xpMultiplier: 1.0, restMultiplier: 1.0 },
+  mage:   { maxHp: 80,  hpDrainMultiplier: 1.3,  xpMultiplier: 1.5, restMultiplier: 1.0 },
+  cleric: { maxHp: 100, hpDrainMultiplier: 1.0,  xpMultiplier: 1.0, restMultiplier: 2.0 },
+}
+```
+
+### XP 테이블
+
+```typescript
+const LEVEL_XP_THRESHOLDS = [0, 500, 1500, 3500, 7000] // Lv1~5 진입 XP
+const ZONE_BY_LEVEL: Record<number, Zone> = {
+  1: 'village', 2: 'forest', 3: 'mountain', 4: 'wasteland', 5: 'castle'
+}
+```
+
+---
+
+## 버전 로드맵
+
+> 태스크 상세 및 진행 현황 → [TASK.md](TASK.md)  
+> 추후 개발 항목 → [BACKLOG.md](BACKLOG.md)
+
+| 버전 | 상태 | 목표 |
+|------|------|------|
+| v0.1 | ✅ 완료 | 기반 인프라 — Canvas 렌더링, 상태머신, 마켓플레이스 배포 |
+| v0.2 | 🔧 진행 중 | 코딩 이벤트 감지, HP 시스템, 캐릭터 애니메이션, 직업 선택 |
+| v0.3 | ⬜ 예정 | 몬스터 & 전투 시스템 (에러 = 몬스터) |
+| v0.4 | ⬜ 예정 | 동료 시스템, 레벨별 캐릭터 진화, 마왕 이벤트 |
+| v0.5 | ⬜ 예정 | 마켓플레이스 완성도 (README GIF, 설정값, 퍼포먼스) |
