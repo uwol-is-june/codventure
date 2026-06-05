@@ -1,8 +1,8 @@
 {
   "name": "codventure",
   "displayName": "Codventure",
-  "description": "Code to embark on an adventure — your pixel cat grows, evolves, and gains powers as you type",
-  "version": "0.3.0",
+  "description": "Code to grow a pixel monster — your companion evolves as you save files and code.",
+  "version": "0.5.0",
   "publisher": "uwol-is-june",
   "repository": {
     "type": "git",
@@ -29,28 +29,7 @@
         }
       ]
     },
-    "commands": [
-      {
-        "command": "codventure.show",
-        "title": "Codventure: Show"
-      },
-      {
-        "command": "codventure.food",
-        "title": "Codventure: /food"
-      },
-      {
-        "command": "codventure.pet",
-        "title": "Codventure: /pet"
-      },
-      {
-        "command": "codventure.sleep",
-        "title": "Codventure: /sleep"
-      },
-      {
-        "command": "codventure.code",
-        "title": "Codventure: /code"
-      }
-    ]
+    "commands": []
   },
   "scripts": {
     "package": "vsce package"
