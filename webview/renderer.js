@@ -4,13 +4,14 @@
 
   // ── 스테이지별 픽셀 배율 ────────────────────────────────────────────────
   // GROUND_Y=96 기준. 각 스테이지 논리 크기(px) × scale ≤ 96 이 되어야 함.
-  // stage 0 (egg 16px): ×4=64  stage 1 (baby 16px): ×5=80
+  // stage 0 (egg 24px): ×3=72  stage 1 (baby 16px): ×5=80
   // stage 2 (16px): ×5=80      stage 3 (rookie 24px): ×4=96
   // stage 4 (32px): ×3=96      stage 5 (40px): ×2=80   stage 6 (48px): ×2=96
-  const STAGE_SCALE    = { 0: 4, 1: 5, 2: 5, 3: 4, 4: 3, 5: 2, 6: 2 };
-  const CANVAS_SIZE    = 128;
-  const GROUND_Y       = 96;   // 지면(풀밭 상단) y 좌표
-  const FRAME_INTERVAL = 800;
+  const STAGE_SCALE        = { 0: 3, 1: 5, 2: 5, 3: 4, 4: 3, 5: 2, 6: 2 };
+  const CANVAS_SIZE        = 128;
+  const GROUND_Y           = 96;   // 지면(풀밭 상단) y 좌표
+  const FRAME_INTERVAL     = 800;
+  const EGG_FRAME_INTERVAL = 200;  // 알 전용 — 6프레임 × 200ms ≈ 1.2s/사이클
 
   // ── DOM ─────────────────────────────────────────────────────────────────
   const canvas = document.getElementById('c');
@@ -119,10 +120,13 @@
     let lastSwitch = performance.now();
 
     function loop(ts) {
-      if (ts - lastSwitch >= FRAME_INTERVAL) {
-        const sprite      = SPRITES[stageIdx];
-        const breathCount = sprite ? Math.min(sprite.frames.length, 2) : 1;
-        frameIdx   = (frameIdx + 1) % breathCount;
+      const interval    = stageIdx === 0 ? EGG_FRAME_INTERVAL : FRAME_INTERVAL;
+      if (ts - lastSwitch >= interval) {
+        const sprite     = SPRITES[stageIdx];
+        const frameCount = sprite
+          ? (stageIdx === 0 ? sprite.frames.length : Math.min(sprite.frames.length, 2))
+          : 1;
+        frameIdx   = (frameIdx + 1) % frameCount;
         lastSwitch = ts;
         render();
       }

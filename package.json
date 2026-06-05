@@ -2,7 +2,7 @@
   "name": "codventure",
   "displayName": "Codventure",
   "description": "Code to grow a pixel monster — your companion evolves as you save files and code.",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "publisher": "uwol-is-june",
   "repository": {
     "type": "git",
