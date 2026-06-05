@@ -2,30 +2,92 @@
 // webview 컨텍스트에서 실행. SPRITES, STAGE 는 index.html 인라인 스크립트에서 주입.
 (function () {
 
-  // ── TASK-03-5: 스테이지별 픽셀 배율 ────────────────────────────────────
-  // 16px × 8 = 128px, 24px × 5 = 120px, 32px × 4 = 128px,
-  // 40px × 3 = 120px, 48px × 2 = 96px  → 모두 128px canvas 안에서 중앙 정렬
-  const STAGE_SCALE    = { 0: 8, 1: 8, 2: 8, 3: 5, 4: 4, 5: 3, 6: 2 };
+  // ── 스테이지별 픽셀 배율 ────────────────────────────────────────────────
+  // GROUND_Y=96 기준. 각 스테이지 논리 크기(px) × scale ≤ 96 이 되어야 함.
+  // stage 0 (egg 16px): ×4=64  stage 1 (baby 16px): ×5=80
+  // stage 2 (16px): ×5=80      stage 3 (rookie 24px): ×4=96
+  // stage 4 (32px): ×3=96      stage 5 (40px): ×2=80   stage 6 (48px): ×2=96
+  const STAGE_SCALE    = { 0: 4, 1: 5, 2: 5, 3: 4, 4: 3, 5: 2, 6: 2 };
   const CANVAS_SIZE    = 128;
-  const FRAME_INTERVAL = 800; // ms — 숨쉬기 주기
+  const GROUND_Y       = 96;   // 지면(풀밭 상단) y 좌표
+  const FRAME_INTERVAL = 800;
 
   // ── DOM ─────────────────────────────────────────────────────────────────
   const canvas = document.getElementById('c');
   const ctx    = canvas.getContext('2d');
 
   // ── 상태 ────────────────────────────────────────────────────────────────
-  // SPRITES: 스테이지 인덱스 배열 (null = 미구현), STAGE: 초기 스테이지
-  let stageIdx   = (typeof STAGE !== 'undefined') ? STAGE : 1;
-  let frameIdx   = 0;
-  let animId     = null;
+  let stageIdx = (typeof STAGE !== 'undefined') ? STAGE : 1;
+  let frameIdx = 0;
+  let animId   = null;
 
-  // ── TASK-03-4: drawSprite 공통 함수 ─────────────────────────────────────
-  // 팔레트 컬러 인덱스 2D 배열을 canvas fillRect 로 그림.
-  // index 0 은 투명 → 건너뜀.
+  // ── 배경: 언덕 높이맵 사전 계산 ──────────────────────────────────────────
+  // 각 x 열이 GROUND_Y로부터 위로 몇 픽셀 솟았는지. 코사인 프로파일.
+  const HILL_MAP = (function () {
+    const map   = new Array(CANVAS_SIZE).fill(0);
+    const hills = [
+      [24,  20, 36],  // [중심x, 최고높이px, 반폭px]
+      [80,  14, 28],
+      [112, 18, 30],
+    ];
+    for (const [cx, peakH, hw] of hills) {
+      for (let x = 0; x < CANVAS_SIZE; x++) {
+        const dx = Math.abs(x - cx);
+        if (dx < hw) {
+          const h = Math.round(peakH * Math.cos((dx / hw) * (Math.PI / 2)));
+          if (h > map[x]) map[x] = h;
+        }
+      }
+    }
+    return map;
+  }());
+
+  // ── 배경 렌더링 ───────────────────────────────────────────────────────────
+  function drawBackground() {
+    // 하늘
+    ctx.fillStyle = '#5BA8D4';
+    ctx.fillRect(0, 0, CANVAS_SIZE, GROUND_Y);
+
+    // 구름 (흰 직사각형 조합)
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(7,  15, 13, 3);  ctx.fillRect(10, 12,  8, 3);
+    ctx.fillRect(84,  9, 17, 3);  ctx.fillRect(88,  6, 10, 3);
+
+    // 먼 언덕 실루엣
+    ctx.fillStyle = '#4A8040';
+    for (let x = 0; x < CANVAS_SIZE; x++) {
+      const h = HILL_MAP[x];
+      if (h > 0) ctx.fillRect(x, GROUND_Y - h, 1, h);
+    }
+
+    // 지면 — 풀밭 (3단 색상으로 깊이감)
+    ctx.fillStyle = '#52C452';
+    ctx.fillRect(0, GROUND_Y,     CANVAS_SIZE, 3);
+    ctx.fillStyle = '#3DAA3D';
+    ctx.fillRect(0, GROUND_Y + 3, CANVAS_SIZE, 3);
+    ctx.fillStyle = '#2E8E2E';
+    ctx.fillRect(0, GROUND_Y + 6, CANVAS_SIZE, 3);
+
+    // 지면 — 흙
+    ctx.fillStyle = '#8B5E32';
+    ctx.fillRect(0, GROUND_Y +  9, CANVAS_SIZE, 7);
+    ctx.fillStyle = '#6B4228';
+    ctx.fillRect(0, GROUND_Y + 16, CANVAS_SIZE, CANVAS_SIZE - GROUND_Y - 16);
+
+    // 풀 터럭 (지면 경계선 위, 6px 간격)
+    ctx.fillStyle = '#70DE70';
+    for (let x = 3; x < CANVAS_SIZE; x += 6) {
+      ctx.fillRect(x,     GROUND_Y - 4, 1, 4);
+      ctx.fillRect(x - 2, GROUND_Y - 2, 1, 2);
+      ctx.fillRect(x + 2, GROUND_Y - 2, 1, 2);
+    }
+  }
+
+  // ── drawSprite ────────────────────────────────────────────────────────────
+  // clearRect 없음 — render() 에서 일괄 처리
   function drawSprite(frames, palette, fi, x, y, scale) {
     const frame = frames[fi];
     const size  = frame.length;
-    ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
     for (let r = 0; r < size; r++) {
       for (let c = 0; c < size; c++) {
         const ci = frame[r][c];
@@ -36,27 +98,25 @@
     }
   }
 
-  // ── TASK-03-6: Canvas 중앙 정렬 ─────────────────────────────────────────
-  // 스프라이트 실제 렌더 크기(spriteSize × scale)를 128px canvas 중앙에 배치.
-  function center(spriteSize, scale) {
-    const offset = Math.floor((CANVAS_SIZE - spriteSize * scale) / 2);
-    return { x: offset, y: offset };
-  }
-
+  // ── render ───────────────────────────────────────────────────────────────
+  // 순서: clearRect → 배경 → 스프라이트 (전경)
+  // 스프라이트 x: 수평 중앙. 스프라이트 y: GROUND_Y 위에 착지.
   function render() {
+    ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    drawBackground();
     const sprite = SPRITES[stageIdx];
-    if (!sprite) { ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE); return; }
-    const scale = STAGE_SCALE[stageIdx] ?? 8;
-    const size  = sprite.frames[0].length; // 16 (stage 0-2)
-    const { x, y } = center(size, scale);
-    drawSprite(sprite.frames, sprite.palette, frameIdx, x, y, scale);
+    if (!sprite) return;
+    const scale   = STAGE_SCALE[stageIdx] ?? 4;
+    const size    = sprite.frames[0].length;
+    const spriteX = Math.floor((CANVAS_SIZE - size * scale) / 2);
+    const spriteY = GROUND_Y - size * scale;
+    drawSprite(sprite.frames, sprite.palette, frameIdx, spriteX, spriteY, scale);
   }
 
-  // ── TASK-03-1: requestAnimationFrame 루프 ───────────────────────────────
-  // 숨쉬기는 frame 0 ↔ 1 순환. 기쁨(frame 2) 등 특수 프레임은 별도 트리거.
+  // ── rAF 루프 (숨쉬기 애니메이션) ─────────────────────────────────────────
   function startLoop() {
     if (animId !== null) cancelAnimationFrame(animId);
-    let lastSwitch = performance.now(); // 재시작 직후 즉각 전환 방지
+    let lastSwitch = performance.now();
 
     function loop(ts) {
       if (ts - lastSwitch >= FRAME_INTERVAL) {
@@ -75,21 +135,20 @@
     if (animId !== null) { cancelAnimationFrame(animId); animId = null; }
   }
 
-  // ── TASK-03-2: visibilitychange — 탭 비활성 시 루프 중단 ─────────────────
+  // 탭 비활성 시 루프 중단
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) { stopLoop(); } else { startLoop(); }
   });
 
-  // ── TASK-04-1/2/3: XP 획득 토스트 ─────────────────────────────────────────
-  const toastEl     = document.getElementById('toast');
-  let toastAccum    = 0;  // TASK-04-3: 누적 XP
-  let toastSource   = '';
-  let toastHideTimer = null;
+  // ── XP 토스트 ─────────────────────────────────────────────────────────────
+  const toastEl       = document.getElementById('toast');
+  let toastAccum      = 0;
+  let toastSource     = '';
+  let toastHideTimer  = null;
   let toastResetTimer = null;
 
   function showToast(amount, source) {
-    // TASK-04-3: 진행 중 타이머 리셋 후 누적
-    if (toastHideTimer !== null)  { clearTimeout(toastHideTimer);  toastHideTimer  = null; }
+    if (toastHideTimer  !== null) { clearTimeout(toastHideTimer);  toastHideTimer  = null; }
     if (toastResetTimer !== null) { clearTimeout(toastResetTimer); toastResetTimer = null; }
     toastAccum += amount;
     toastSource = source;
@@ -99,13 +158,11 @@
     toastEl.style.opacity    = '1';
     toastEl.textContent      = `+${toastAccum} XP (${toastSource})`;
 
-    // 0.8초 표시 후 위로 사라짐
     toastHideTimer = setTimeout(() => {
       toastEl.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
       toastEl.style.opacity    = '0';
       toastEl.style.transform  = 'translateY(-12px)';
       toastHideTimer = null;
-      // 전환 완료 후 누적값 리셋
       toastResetTimer = setTimeout(() => {
         toastAccum      = 0;
         toastResetTimer = null;
@@ -113,10 +170,9 @@
     }, 800);
   }
 
-  // ── TASK-08-2: 부화 연출 ────────────────────────────────────────────────
-  // Phase 1) 알 흔들림 3사이클 (frame 0↔1, 200ms 간격)
-  // Phase 2) 흰색 오버레이 페이드인 400ms (알 위에)
-  // Phase 3) stage 1로 전환 후 페이드아웃 400ms → startLoop()
+  // ── 부화 연출 ────────────────────────────────────────────────────────────
+  // Phase 1) 알 흔들림 6회 (frame 0↔1, 200ms 간격)
+  // Phase 2) 흰색 페이드인 400ms → stage 1 전환 → 페이드아웃 400ms → startLoop()
   function hatch() {
     stopLoop();
     stageIdx = 0;
@@ -166,7 +222,7 @@
     }
   }
 
-  // ── STATE_UPDATE / XP_GAIN / HATCH 메시지 핸들러 ──────────────────────
+  // ── 메시지 핸들러 ─────────────────────────────────────────────────────────
   window.addEventListener('message', ({ data }) => {
     switch (data.type) {
       case 'STATE_UPDATE': {
@@ -193,4 +249,4 @@
   render();
   startLoop();
 
-})();
+}());
