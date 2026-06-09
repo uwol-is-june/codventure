@@ -1,31 +1,10 @@
 # codventure — TASK.md
 
-> 기획 전체: [PLAN.md](PLAN.md) | 추후 개발: [BACKLOG.md](BACKLOG.md)
+> v1.0 출시 완료. 추후 개발: [BACKLOG.md](BACKLOG.md)
 
 ---
 
-## 다음 버전: v0.6 — 성장기 스프라이트 + 레벨업 파티클
+## 잔여 작업
 
-> 세부 태스크는 개발 시작 시 BACKLOG.md에서 옮겨 작성.
-
----
-
-## v0.5.2 `완료`
-
-- [x] 2D 횡스크롤 풀밭 배경 Canvas 렌더링 (하늘/구름/언덕/풀밭/흙/풀 터럭)
-- [x] 배경 위 알 크기 조정 (`GROUND_Y = 96` 기준선, 지면 착지)
-- [x] 알 대기 애니메이션 좌우 흔들림 6프레임 (200ms/프레임, 1.2s 사이클)
-- [x] 알 스프라이트 16×16 → 24×24 해상도 업 (하이라이트 색 추가, 사선 줄무늬 2개)
-
----
-
-## v0.5 `완료`
-
-- [x] 레벨 1–2에서 유아기 스프라이트 렌더링
-- [x] 레벨 3–4에서 유아기 II 스프라이트 렌더링
-- [x] 800ms 숨쉬기 애니메이션 (rAF 루프, 탭 비활성 시 중단)
-- [x] 파일 저장 시 `+2 XP (저장)` 토스트 표시
-- [x] 알 → 유아기 부화 연출 (흔들림 + 흰빛 페이드)
-- [x] `MonsterState.js` — 데이터 모델, globalState CRUD, `levelToStage`, `applyXp`
-- [x] `XpTracker.js` — 저장 XP 적립, 레벨업/진화/부화 판정 + postMessage
-- [x] 다크/라이트 테마 색상 대응
+- [ ] 마켓플레이스 스크린샷 3장 직접 촬영  
+  저장 위치: `docs/screenshots/egg.png` / `rookie.png` / `mega.png` + `demo.gif`

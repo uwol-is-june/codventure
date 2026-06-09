@@ -2,7 +2,7 @@
   "name": "codventure",
   "displayName": "Codventure",
   "description": "Code to grow a pixel monster — your companion evolves as you save files and code.",
-  "version": "0.5.2",
+  "version": "1.0.0",
   "publisher": "uwol-is-june",
   "repository": {
     "type": "git",
@@ -13,7 +13,8 @@
   },
   "icon": "icon.png",
   "categories": [
-    "Other"
+    "Other",
+    "Visualization"
   ],
   "activationEvents": [
     "onStartupFinished"
@@ -29,7 +30,17 @@
         }
       ]
     },
-    "commands": []
+    "commands": [],
+    "configuration": {
+      "title": "Codventure",
+      "properties": {
+        "codventure.sound": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "사운드 효과 on/off (레벨업·진화·XP 획득 시 8비트 효과음)"
+        }
+      }
+    }
   },
   "scripts": {
     "package": "vsce package"

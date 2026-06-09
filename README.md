@@ -1,104 +1,163 @@
 # Codventure
 
-> **코딩할수록 몬스터가 자란다. 코드는 먹이다.**
+> **코딩할수록 몬스터가 자란다.**
 
-파일을 저장할 때마다 XP를 얻고, 알에서 깨어난 픽셀 몬스터가 당신과 함께 성장합니다.  
-VSCode Explorer 사이드바에 조용히 자리를 잡고, 코딩하는 동안 숨 쉽니다.
+VSCode Explorer 사이드바에 픽셀 몬스터가 살고 있습니다.  
+파일을 저장할 때마다 XP를 얻고, 알에서 시작해 7단계를 거쳐 궁극체로 진화합니다.  
+설치만 하면 됩니다. 버튼도, 설정도, 로그인도 없습니다.
 
----
-
-## 어떻게 동작하나요?
-
-별도 조작이 없습니다. 설치하면 끝입니다.
-
-| 당신이 하는 것 | 게임에서 일어나는 것 |
-|---|---|
-| 파일을 저장한다 | `+2 XP` 획득 |
-| XP가 쌓인다 | 레벨이 오른다 |
-| 처음으로 레벨업 | 알이 깨지고 몬스터가 탄생한다 |
-| 레벨이 계속 오른다 | 몬스터가 성장하고 진화한다 |
+![알 → 궁극체 진화 데모](docs/screenshots/demo.gif)
 
 ---
 
-## 진화 단계
+## 플레이 방법
 
-디지몬 시리즈에서 영감받은 7단계 성장 구조입니다.
+Codventure는 완전한 패시브 게임입니다. **평소처럼 코딩하세요.**
 
-| 단계 | 이름 | 레벨 | 상태 |
-|------|------|------|------|
-| 0 | 알 (Egg) | 0 | ✅ 구현됨 |
-| 1 | 유아기 (Baby) | 1–2 | ✅ 구현됨 |
-| 2 | 유아기 II (In-Training) | 3–4 | ✅ 구현됨 |
-| 3 | 성장기 (Rookie) | 5–9 | 🔧 v0.6 예정 |
-| 4 | 성숙기 (Champion) | 10–19 | 📋 v0.7 예정 |
-| 5 | 완전체 (Ultimate) | 20–39 | 📋 v1.0 예정 |
-| 6 | 궁극체 (Mega) | 40+ | 📋 v1.0 예정 |
+### 기본 흐름
 
----
+1. **설치** → Explorer 사이드바 **Codventure** 패널에 알이 나타납니다
+2. **파일을 저장** → `+2 XP` 획득, HUD XP 바가 차오릅니다
+3. **XP 임계값 도달** → 레벨업, 파티클 연출
+4. **특정 레벨 도달** → 흰빛 감싸기 연출과 함께 몬스터가 진화합니다
+5. **Lv 40+** → 궁극체 (Mega), 4프레임 금빛 오라 루프
 
-## XP 획득 방법
+### 진화 단계와 필요 레벨
 
-| 행동 | XP |
-|------|----|
-| 파일 저장 | +2 |
-| 30분 연속 코딩 세션 *(예정)* | +10 |
-| 100줄 추가 *(예정)* | +5 |
-| 디버그 세션 시작 *(예정)* | +3 |
+| 단계 | 이름 | 달성 레벨 | 레벨까지 필요 저장 횟수 (기준) |
+|:---:|------|:---:|:---:|
+| 0 | 알 (Egg) | — | — |
+| 1 | 유아기 (Baby) | Lv 1 | 약 25회 |
+| 2 | 유아기 II (In-Training) | Lv 3 | 약 175회 |
+| 3 | 성장기 (Rookie) | Lv 5 | 약 575회 |
+| 4 | 성숙기 (Champion) | Lv 10 | 약 3,700회 |
+| 5 | 완전체 (Ultimate) | Lv 20 | 약 27,000회 |
+| 6 | 궁극체 (Mega) | Lv 40 | 약 90,000회 |
 
-### 레벨업 기준
+> 저장 횟수는 파일 저장 1회 = +2 XP 기준 추산값입니다.
+
+### 레벨업 XP 기준
 
 ```
-Lv 0 → 1 :   50 XP  ← 이 순간 알이 깨집니다
-Lv 1 → 2 :  100 XP
-Lv 2 → 3 :  200 XP  ← 유아기 II 진화
-Lv 3 → 4 :  300 XP
-Lv 4 → 5 :  500 XP  ← 성장기 진화
-Lv 9 → 10: 2000 XP  ← 성숙기 진화
-...이후 레벨당 500 XP씩 증가
+Lv  0 →  1:    50 XP  ← 알이 깨집니다
+Lv  1 →  2:   100 XP
+Lv  2 →  3:   200 XP  ← 유아기 II 진화
+Lv  3 →  4:   300 XP
+Lv  4 →  5:   500 XP  ← 성장기 진화
+Lv  5 →  6:   700 XP
+Lv  6 →  7:   900 XP
+Lv  7 →  8:  1,200 XP
+Lv  8 →  9:  1,500 XP
+Lv  9 → 10:  2,000 XP  ← 성숙기 진화
+Lv 10 이후:  이전 임계값 + 500 XP씩 증가
 ```
+
+### 비활성 패널티 (동기부여용)
+
+마지막 저장 후 **72시간** 이상 지나면 몬스터가 눈물을 흘립니다.  
+다시 저장하면 즉시 해제됩니다. 퇴화나 XP 감소는 없습니다.
+
+### 몬스터 이동
+
+Codventure 패널에 포커스된 상태에서 **방향키(←→↑↓)** 로 몬스터를 풀밭 위에서 이동할 수 있습니다.  
+나무에는 막힙니다.
 
 ---
 
-## 현재 기능 (v0.5)
+## 스크린샷
 
-- **픽셀 아트 스프라이트** — 알·유아기·유아기 II 3단계 핸드크래프트 도트
-- **숨쉬기 애니메이션** — 800ms 주기 루프, 탭 비활성 시 자동 중단
-- **부화 연출** — 알 흔들림 → 흰빛 번짐 → 유아기 등장
-- **XP 토스트** — 저장마다 `+2 XP (저장)` 알림
-- **상태 영속화** — VSCode globalState로 XP·레벨 저장 (재시작 후에도 유지)
-- **다크/라이트 테마** — VSCode 테마 색상에 자동 대응
+| 알 (Egg) | 성장기 (Rookie) | 궁극체 (Mega) |
+|:---:|:---:|:---:|
+| ![알](docs/screenshots/egg.png) | ![성장기](docs/screenshots/rookie.png) | ![궁극체](docs/screenshots/mega.png) |
 
 ---
 
 ## 설치
 
-VS Code Marketplace에서 **Codventure** 검색 또는:
+### VS Code Marketplace (권장)
 
-```
-ext install uwol-is-june.codventure
+Marketplace에서 **Codventure** 검색, 또는 터미널에서:
+
+```bash
+code --install-extension uwol-is-june.codventure
 ```
 
-설치 후 Explorer 사이드바 **Codventure** 패널에서 몬스터를 확인할 수 있습니다.
+설치 후 왼쪽 Explorer 사이드바를 스크롤하면 **Codventure** 패널이 보입니다.
+
+### VSIX 파일로 오프라인 설치
+
+1. [Releases 페이지](https://github.com/uwol-is-june/codventure/releases)에서 `.vsix` 파일 다운로드
+2. VSCode 명령 팔레트 `Ctrl+Shift+P` (Mac: `Cmd+Shift+P`)
+3. `Extensions: Install from VSIX...` 선택 → 다운로드한 파일 선택
+
+---
+
+## 설정
+
+VSCode 설정(`Ctrl+,`)에서 **Codventure** 를 검색하거나 `settings.json`에 직접 추가합니다.
+
+| 설정 키 | 기본값 | 설명 |
+|---------|:------:|------|
+| `codventure.sound` | `false` | 8비트 효과음 on/off — XP 획득(딩), 레벨업(아르페지오), 진화(팡파르) |
+
+```json
+{
+  "codventure.sound": true
+}
+```
+
+설정 변경은 즉시 반영됩니다.
 
 ---
 
 ## 설계 원칙
 
-- **Zero dependencies** — 런타임 외부 패키지 없음
-- **Zero interruption** — 코딩 흐름을 끊는 조작 없음
-- **Zero network** — 인터넷 통신 없음, 모든 상태는 로컬 저장
-- **Zero cost** — 과금 요소 없음
+| 원칙 | 내용 |
+|------|------|
+| **Zero dependencies** | 런타임 외부 패키지 없음 — Canvas + Web Audio API만 사용 |
+| **Zero interruption** | 모달, 팝업, 포커스 전환 없음 — 코딩 흐름을 끊지 않습니다 |
+| **Zero network** | 인터넷 통신 없음 — 모든 상태는 VSCode `globalState`에 로컬 저장 |
+| **Zero cost** | 완전 무료, 과금 없음 |
+
+---
+
+## 기여 및 빌드
+
+### 개발 환경 설정
+
+```bash
+git clone https://github.com/uwol-is-june/codventure.git
+cd codventure
+npm install          # vsce 설치
+```
+
+### 로컬 실행
+
+VSCode에서 이 폴더를 열고 `F5` 를 누르면 Extension Development Host가 실행됩니다.
+
+### VSIX 패키징
+
+```bash
+npm run package      # codventure-x.x.x.vsix 생성
+```
+
+생성된 `.vsix` 파일은 VSIX 설치 방법으로 테스트할 수 있습니다.
+
+### 마켓플레이스 배포
+
+```bash
+vsce login uwol-is-june   # PAT 인증 (최초 1회)
+vsce publish              # 현재 버전으로 배포
+vsce publish patch        # 패치 버전 자동 범프 후 배포
+```
+
+> 배포 전 `package.json`의 `version` 필드와 `CHANGELOG.md`를 먼저 업데이트하세요.
 
 ---
 
 ## 버전 히스토리
 
-### v0.5.0 — 2026-06-05
-
-- 알 스프라이트 + 부화 연출 (흔들림 → 흰빛 페이드)
-- 유아기·유아기 II 스프라이트 + 숨쉬기 애니메이션
-- XP 시스템: 파일 저장 +2 XP, 레벨업 판정, 상태 영속화
-- MonsterState / XpTracker 모듈 분리
+전체 변경 이력은 [CHANGELOG.md](CHANGELOG.md)를 참고하세요.
 
 ---
 

@@ -26,6 +26,19 @@ function levelToStage(level) {
   return 6;                               // 궁극체
 }
 
+// ── TASK-7.3: 진화 계통 테이블 ───────────────────────────────────────────────
+// species → 각 stage의 SPRITES 배열 인덱스
+// 현재 'default' 단일 계통만 유지; v1.x에서 복수 계통 추가 예정
+const EVOLUTION_TABLE = {
+  default: [0, 1, 2, 3, 4, 5, 6],
+};
+
+// species + stage → SPRITES 배열 인덱스
+function getSpriteIndex(species, stage) {
+  const row = EVOLUTION_TABLE[species] ?? EVOLUTION_TABLE.default;
+  return row[Math.min(stage, row.length - 1)];
+}
+
 // ── TASK-05-1: 기본값 초기화 ────────────────────────────────────────────────
 function defaultMonster() {
   const now = Date.now();
@@ -55,6 +68,12 @@ function saveMonster(context, data) {
   return context.globalState.update(GLOBAL_STATE_KEY, data);
 }
 
+// ── TASK-10.2: 비활성 패널티 판정 ────────────────────────────────────────────
+// lastActive 기준 72시간 이상 경과 시 true
+function isSad(monster) {
+  return Date.now() - (monster.lastActive ?? 0) >= 72 * 3600000;
+}
+
 // ── TASK-05-4: XP 누적 + 레벨업 판정 ────────────────────────────────────────
 // 반환: { monster, leveledUp: boolean, evolved: boolean }
 function applyXp(monster, amount) {
@@ -81,4 +100,4 @@ function applyXp(monster, amount) {
   return { monster: m, leveledUp, evolved };
 }
 
-module.exports = { defaultMonster, getMonster, saveMonster, levelToStage, applyXp, XP_THRESHOLDS };
+module.exports = { defaultMonster, getMonster, saveMonster, levelToStage, getSpriteIndex, EVOLUTION_TABLE, applyXp, XP_THRESHOLDS, thresholdFor, isSad };
